@@ -130,12 +130,7 @@ const registerStudent = async (req, res) => {
         console.error('Error registering student:', error.message, error.stack);
 
        
-        if (error instanceof mongoose.Error.ValidationError) {
-            return res.status(400).json({
-                message: "Validation error!",
-                details: error.errors
-            });
-        }
+         
  
         return res.status(500).json({
             message: "Internal server error!"
@@ -143,7 +138,40 @@ const registerStudent = async (req, res) => {
     }
 };
 
+// student login 
+const studentLogin=  async ( req , res )=>{
+try {
+          const {email, password} = req.body; 
 
+       const student = await Student.findOne({email,password})
+       console.log(student)
+       if (!student) {
+        return res.status(400).json({
+          message: "Invalid email or password!"
+        });
+      }
+        if(student.email == req.body.email && student.password == req.body.password){
+            const token = jwt.sign({email:student.email,id:student._id},secretKey);
+            console.log(token)
+            return res.status(200).json({
+       
+                student,
+                token,
+                message:"Student  login Sucessfully!"
+            })
+        }
+
+
+    
+} catch (error) {
+    return  res.status(5000).json({
+
+        message:'Internal server error!'
+    })
+}
+
+
+}
  
 const studentsofLoginuser = async (req, res) => {
     try {
@@ -253,4 +281,4 @@ const studentsofLoginuser = async (req, res) => {
 
 
 
-module.exports ={userRegister, login, registerStudent,studentsofLoginuser,studentUpdate,delteStudent}
+module.exports ={userRegister, login, registerStudent,studentsofLoginuser,studentUpdate,delteStudent,studentLogin}

@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
         require:true
     },
     age: { 
-        type: Number, 
+        type:Date, 
         min: 18 },
 
 
