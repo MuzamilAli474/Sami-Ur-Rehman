@@ -1,39 +1,51 @@
-// const nodemailer = require("nodemailer");
 
-// const transporter = nodemailer.createTransport({
-//     host: 'smtp.gmail.com',
-//     port: 587,
-//     secure: false, 
-//     auth: {
-//         user: 'muzamil.6aug24webgpt@gmail.com',  
-//         pass: 'cjcy cync rjsh srix' 
-//     }
-// });
+const nodemailer = require('nodemailer');
 
 
+// const generateRandomPassword = () => {
+//     return crypto.randomBytes(8).toString('hex');  
+// };
 
-// function generateOTP() {
-//     return crypto.randomInt(100000, 999999).toString();  
-// }
-// app.post('/send-otp', async (req, res) => {
-//     const { email } = req.body;
+
+const  generateRandomPassword = (length = 6)=> {
+    let password = '';
+    for (let i = 0; i < length; i++) {
+      // Generate a random digit between 0 and 9
+      password += Math.floor(Math.random() * 10);
+    }
+    return password;
+  }
+
+const sendEmail = async (email, password) => {
   
-//     const otp = generateOTP();
-   
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',  
+        auth: {
+            user: 'muzamil.6aug24webgpt@gmail.com', 
+            pass: 'cjcy cync rjsh srix' 
+        }
+    });
 
-//     const mailOptions = {
-//         from: 'muzamil.6aug24webgpt@gmail.com',
-//         to: email,
-//         subject: 'Email Verification OTP',
-//         text: `Your OTP for email verification is: ${otp}`
-//     };
+    const mailOptions = {
+        from: 'muzamil.6aug24webgpt@gmail.com',
+        to: email,
+        subject: 'Your Account Registration Details',
+        text: `Hello,
 
-//     try {
-//         await transporter.sendMail(mailOptions);
-//         res.status(200).json({ message: 'OTP sent successfully', otp });
-//     } catch (error) {
-//         res.status(500).json({ error: 'Error sending OTP' });
-//     }
-// });
+        Your account has been created successfully. Your login password is: ${password}
+ and emil is this ${email}
+        Please change your password after logging in for security reasons.
 
-// module.exports = generateOTP;
+        Best regards,
+        Muzamil ali`
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+    } catch (error) {
+        console.error('Error sending email:', error.message);
+    }
+};
+
+
+module.exports = {generateRandomPassword,sendEmail}

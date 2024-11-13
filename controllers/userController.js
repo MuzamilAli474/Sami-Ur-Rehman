@@ -1,7 +1,11 @@
 const User = require('../models/userModel.js');
 const  Student = require('../models/studentModel.js');
-const jwt = require('jsonwebtoken');
 
+const mongoose = require('mongoose');
+
+const jwt = require('jsonwebtoken');
+ const  {generateRandomPassword,sendEmail} = require('../middleware/mailer.js');
+ 
 const secretKey ="12345";
 
 const userRegister= async (req,res)=>{
@@ -17,14 +21,19 @@ if(user){
         message:"User is already Register!"
     })
 }
+ 
+
 
 const newUser= await User.create({
     name,
     email,
     password,
-    age
+    age,
+    
+   
 })
 // console.log(newUser)
+ 
 return res.status(200).json({
     newUser,
     message:"User is Register sucessfully!"
@@ -99,16 +108,18 @@ const registerStudent = async (req, res) => {
                 message: "Student is already registered with this email"
             });
         }
+        const randomPassword = generateRandomPassword(10);
  
         const newStudent = await Student.create({
             userId: req.userId, 
             name,
             email,
             dob,
-            batch
+            batch,
+            password:randomPassword
         });
 
-       
+        await sendEmail(email, randomPassword);
         return res.status(200).json({
             newStudent,
             message: "Student created successfully!"
@@ -182,6 +193,7 @@ const studentsofLoginuser = async (req, res) => {
                 message :" You are not authorized to update this student."
             })
          }else{
+
             const updateStudent = await Student.findByIdAndUpdate(studentId,newdataofStudent,{new: true})
            
              res.status(200).json({
@@ -239,6 +251,6 @@ const studentsofLoginuser = async (req, res) => {
 
   }
 
-  
+
 
 module.exports ={userRegister, login, registerStudent,studentsofLoginuser,studentUpdate,delteStudent}
