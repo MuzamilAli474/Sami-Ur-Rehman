@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const secretKey = '12345'
 
 const authenticate = (req, res, next) => {
+    
     const authHeader = req.headers.authorization;
 // console.log(authHeader)
  

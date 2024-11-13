@@ -1,4 +1,5 @@
 const User = require('../models/userModel.js');
+
 const  Student = require('../models/studentModel.js');
 
 const mongoose = require('mongoose');
@@ -8,7 +9,7 @@ const jwt = require('jsonwebtoken');
  
 const secretKey ="12345";
 
-const userRegister= async (req,res)=>{
+const userRegister = async (req , res)=>{
     
     // console.log(req.body)
  try {
