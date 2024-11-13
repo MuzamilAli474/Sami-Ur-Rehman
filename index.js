@@ -16,6 +16,7 @@ app.use(express.json());
 
 app.use('/',require('./routers/userRouter.js'))
 
+app.use('/Cousrse',require('./routers/courseRouter.js'))
 
 
 
