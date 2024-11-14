@@ -1,5 +1,7 @@
 const User = require('../models/userModel.js');
 
+const  Course = require('../models/studentcourseModel');
+
 const  Student = require('../models/studentModel.js');
 
 const mongoose = require('mongoose');
@@ -265,20 +267,27 @@ const studentsofLoginuser = async (req, res) => {
                    message :" You are not authorized to update this student."
             })
          }else{
-           const studentDelete = await Student.findByIdAndDelete(studentId)
+            
+
+           const studentDelete = await Student.findByIdAndDelete(studentId);
+
+           const courseDeletionResult = await Course.deleteMany({ studentsID: studentId });
+            console.log(courseDeletionResult);
+
             res.status(200).json({
 
-                   message: "Student deleted successfully!"
+                   message: "Student and associated courses deleted successfully!"
             })
 
          }
 
     } catch (error) {
-         message: "Internal server error!"
-    }
+         return res.status(500).json({
+            message: "Internal server error!"
+    })
 
 
-  }
+  }}
 
 
 
