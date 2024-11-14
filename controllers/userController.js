@@ -270,9 +270,10 @@ const studentsofLoginuser = async (req, res) => {
             
 
            const studentDelete = await Student.findByIdAndDelete(studentId);
-
+            if(studentDelete){
            const courseDeletionResult = await Course.deleteMany({ studentsID: studentId });
             console.log(courseDeletionResult);
+                                 }
 
             res.status(200).json({
 
