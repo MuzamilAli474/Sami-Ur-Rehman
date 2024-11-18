@@ -6,16 +6,22 @@ const {userRegister,login,registerStudent,studentsofLoginuser,studentUpdate,delt
 
 const middleware = require('../middleware/auth.js');
 // const generateOTP= require('../middleware/mailer.js')
+
+//all these api are related to teacher 
 // user registration 
 router.post('/userRegister',userRegister);
 
 // user login 
 router.post('/login',login);
-
-
+// studentRegister
 router.post('/studentRegister',middleware,registerStudent);
-router.post('/studentLogin',studentLogin)
+//student of login user for the list display
 router.get('/studentsofLoginuser',middleware,studentsofLoginuser);
+
+
+
+//all api related to the student 
+router.post('/studentLogin',studentLogin)
 
 router.patch('/studentUpdate/:studentId',middleware,studentUpdate);
 

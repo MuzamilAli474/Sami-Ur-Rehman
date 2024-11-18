@@ -29,7 +29,11 @@ batch: {
 password: { 
     type: String,
      required: true 
-    }
+    },
+    photo: {
+        type: String, 
+        default: '' 
+      }
 
 
 

@@ -7,13 +7,14 @@ const  Student = require('../models/studentModel.js');
 const mongoose = require('mongoose');
 
 const jwt = require('jsonwebtoken');
+
  const  {generateRandomPassword,sendEmail} = require('../middleware/mailer.js');
  
 const secretKey ="12345";
 
 const userRegister = async (req , res)=>{
     
-    // console.log(req.body)
+    console.log(req.body)
  try {
     const {name,email,password,age} = req.body;
 
