@@ -8,7 +8,7 @@ const path = require('path');
 
 const middleware = require('../middleware/studentmiddleware.js');
 
-const {addcourse,courseUpdate,deleteCource,updatepassword,uploadsPhoto,uploads,allStudent} = require('../controllers/studentController.js');
+const {addcourse,courseUpdate,deleteCource,updatepassword,uploadsPhoto,uploads,allStudent,sendFriendRequest,acceptFriendRequest,rejectFriendRequest} = require('../controllers/studentController.js');
 
 
   
@@ -41,5 +41,10 @@ router.patch('/uploadsPhoto/studentPhotos',middleware,uploads.single('photo'), u
  
 router.get('/allStudent',middleware,allStudent)
 
+router.post('/sendFriendRequest',sendFriendRequest)
+
+router.post('/acceptFriendRequest',acceptFriendRequest)
+
+router.post('/rejectFriendRequest',rejectFriendRequest)
 
  module.exports = router 

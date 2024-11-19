@@ -5,6 +5,7 @@
  const path = require ('path');
 
  const Student = require('../models/studentModel');
+  const Friendship = require('../models/friendshipModel.js')
 
  const  {sendEmail} = require('../middleware/mailer.js');
  
@@ -258,33 +259,109 @@ return res.status(200).json({
   
 }
 
-const allStudent = async ( req , res )=>{
-  try {
-
-    const student = await Student.find().select('-password');
-    if(!student){
+const allStudent = async (req, res) => {
+    try {
+     
+      const students = await Student.find().select('name');
+      
+      if (students.length === 0) {
         return res.status(404).json({
-            message:"No result found!"
-        })
-    }else{
+          message: "No result found!"
+        });
+      } else {
         return res.status(200).json({
-            student,
-            message:"Student Founds!"
-        })
-    }
-    
-  } catch (error) {
-    return res.status(500).json({
-        message: "Internal server error!"
-    });
-  }
-
-
-}
+          students,
+          message: "Students found!"
+        });
+      }
   
+    } catch (error) {
+      return res.status(500).json({
+        message: "Internal server error!"
+      });
+    }
+  }
+  
+  
+ const sendFriendRequest = async (req, res) => {
+    const { senderId, receiverId } = req.body;
+
+    try {
+        // Check if the friendship already exists
+        const existingRequest = await Friendship.findOne({
+            $or: [
+                { sender: senderId, receiver: receiverId },
+                { sender: receiverId, receiver: senderId }
+            ]
+        });
+
+        if (existingRequest) {
+            return res.status(400).json({ message: 'Friend request already sent or friendship exists' });
+        }
+
+        // Create new friend request
+        const newRequest = new Friendship({
+            sender: senderId,
+            receiver: receiverId,
+            status: 'pending',
+        });
+
+        await newRequest.save();
+        res.json({ message: 'Friend request sent successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
 
 
-module.exports = {addcourse,courseUpdate,deleteCource,updatepassword,uploadsPhoto,uploads,allStudent}
+const acceptFriendRequest = async (req, res) => {
+    const { senderId, receiverId } = req.body;
+
+    try {
+        // Find the friend request
+        const request = await Friendship.findOne({ sender: senderId, receiver: receiverId });
+
+        if (!request || request.status !== 'pending') {
+            return res.status(400).json({ message: 'No pending friend request' });
+        }
+
+        // Update status to 'accepted'
+        request.status = 'accepted';
+        await request.save();
+
+        res.json({ message: 'Friend request accepted' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+
+const rejectFriendRequest = async (req, res) => {
+    const { senderId, receiverId } = req.body;
+
+    try {
+        // Find the friend request
+        const request = await Friendship.findOne({ sender: senderId, receiver: receiverId });
+
+        if (!request || request.status !== 'pending') {
+            return res.status(400).json({ message: 'No pending friend request' });
+        }
+
+        // Update status to 'rejected'
+        request.status = 'rejected';
+        await request.save();
+
+        res.json({ message: 'Friend request rejected' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+
+module.exports = {addcourse,courseUpdate,deleteCource,updatepassword,uploadsPhoto,uploads,allStudent,sendFriendRequest,acceptFriendRequest,rejectFriendRequest}
 
 
 

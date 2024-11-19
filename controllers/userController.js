@@ -290,7 +290,8 @@ const studentsofLoginuser = async (req, res) => {
 
 
   }}
-
+ 
+    
 
 
 module.exports ={userRegister, login, registerStudent,studentsofLoginuser,studentUpdate,delteStudent,studentLogin}
